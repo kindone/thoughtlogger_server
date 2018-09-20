@@ -1,18 +1,17 @@
-import * as express from 'express';
+import * as express from 'express'
+import * as bodyParser from 'body-parser'
 
-// Import WelcomeController from controllers entry point
-import {WelcomeController} from './controllers';
+import { StateController } from './controllers'
 
 // Create a new express application instance
-const app: express.Application = express();
-// The port the express app will listen on
-const port: number = process.env.PORT  ? parseInt(process.env.PORT) : 3000;
+const app: express.Application = express()
 
-// Mount the WelcomeController at the /welcome route
-app.use('/welcome', WelcomeController);
+const port: number = process.env.PORT  ? parseInt(process.env.PORT) : 3000
 
-// Serve the application at the given port
+app.use(bodyParser.json())
+
+app.use('/state', StateController)
+
 app.listen(port, () => {
-    // Success callback
-    console.log(`Listening at http://localhost:${port}/`);
-});
+    console.log(`Listening at http://localhost:${port}/`)
+})
