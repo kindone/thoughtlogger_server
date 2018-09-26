@@ -18,7 +18,7 @@ router.get('/', (req: Request, response: Response) => {
     SingleUserState.get(client).then((res) => {
         response.json(res)
     }).catch(() => {
-        response.status(500)
+        response.sendStatus(500)
     })
 })
 
@@ -26,7 +26,7 @@ router.put('/', (req: Request, response: Response) => {
     SingleUserState.set(client, req.body).then(() =>{
         response.send()
     }).catch(() => {
-        response.status(500)
+        response.sendStatus(500)
     })
 })
 

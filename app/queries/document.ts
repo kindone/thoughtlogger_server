@@ -13,8 +13,8 @@ export const Document = {
         const result = await client.query('SELECT * from document where uri LIKE $1', [prefix + '%'])
         return result.rows
     },
-    insert: async (client:Client, uri:string, content:string) => {
-        const result = await client.query('insert into document (id, uri, content) VALUES(md5(random()::text || clock_timestamp()::text)::uuid, $1, $2)', [uri, content])
+    insert:  async (client:Client, uri:string, content:string) => {
+        const result = client.query('insert into document (id, uri, content) VALUES(md5(random()::text || clock_timestamp()::text)::uuid, $1, $2)', [uri, content])
         return result
     },
     update: async (client:Client, id:string, uri:string, content:string) => {
