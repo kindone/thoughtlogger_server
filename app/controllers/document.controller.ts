@@ -44,9 +44,19 @@ router.post('/', (req: Request, response: Response) => {
 
 router.put('/:id', (req: Request, response: Response) => {
     const id = req.params.id as string
-    const uri = req.body.uri as string
     const content = req.body.content as string
-    Document.update(client, id, uri, content).then(() =>{
+    Document.update(client, id, content).then(() =>{
+        response.send()
+    }).catch((err) => {
+        console.log('PUT error:', err)
+        response.sendStatus(500)
+    })
+})
+
+router.put('/:id/uri', (req: Request, response: Response) => {
+    const id = req.params.id as string
+    const uri = req.body.uri as string
+    Document.move(client, id, uri).then(() =>{
         response.send()
     }).catch((err) => {
         console.log('PUT error:', err)

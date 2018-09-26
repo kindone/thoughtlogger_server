@@ -17,8 +17,12 @@ export const Document = {
         const result = client.query('insert into document (id, uri, content) VALUES(md5(random()::text || clock_timestamp()::text)::uuid, $1, $2)', [uri, content])
         return result
     },
-    update: async (client:Client, id:string, uri:string, content:string) => {
-        const result = await client.query("UPDATE document set uri = $2, content = $3 where id = $1", [id, uri, content])
+    update: async (client:Client, id:string, content:string) => {
+        const result = await client.query("UPDATE document set content = $2 where id = $1", [id, content])
+        return result
+    },
+    move: async (client:Client, id:string, uri:string) => {
+        const result = await client.query("UPDATE document set uri = $2 where id = $1", [id, uri])
         return result
     },
     delete: async (client:Client, id:string)  => {
