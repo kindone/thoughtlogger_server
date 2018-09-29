@@ -15,8 +15,8 @@ const router: Router = Router()
 
 
 router.get('/:id', (req: Request, response: Response) => {
-    Document.findByID(client, req.params.id as string).then((res) => {
-        response.json(res)
+    Document.findByID(client, req.params.id as string).then((result) => {
+        response.json(result)
     }).catch(() => {
         response.sendStatus(500)
     })
@@ -24,8 +24,8 @@ router.get('/:id', (req: Request, response: Response) => {
 
 router.get('/', (req: Request, response: Response) => {
     const prefix = req.query['prefix'] || ''
-    Document.allByURIPrefix(client, prefix).then((res) => {
-        response.json(res)
+    Document.allByURIPrefix(client, prefix).then((result) => {
+        response.json(result)
     }).catch(() => {
         response.sendStatus(500)
     })
@@ -35,9 +35,11 @@ router.post('/', (req: Request, response: Response) => {
     const uri = req.body.uri as string
     const content = req.body.content as string
     Document.insert(client, uri, content).then((result) =>{
-        response.send()
+        // setTimeout((function() {response.json(result)}), 5000)
+        response.json(result)
     }).catch((err) => {
         console.log('POST error:', err)
+        // setTimeout((function() {response.sendStatus(500)}), 5000)
         response.sendStatus(500)
     })
 })
