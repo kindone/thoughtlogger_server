@@ -2,9 +2,6 @@
 import { Router, Request, Response } from 'express'
 import { Client } from 'pg'
 import { Document } from '../queries/document'
-import { DocumentWithHistory } from '../queries/document_with_history';
-import { ISyncRequest } from 'text-versioncontrol';
-import { History } from '../queries/history';
 
 const client = new Client({user: 'postgres',
     host: 'localhost',
@@ -36,7 +33,7 @@ router.get('/', (req: Request, response: Response) => {
 
 router.post('/', (req: Request, response: Response) => {
     const uri = req.body.uri as string
-    const rev = req.body.rev as number || 0
+    const rev = req.body.rev as number
     const content = req.body.content as string
     Document.insert(client, uri, rev, content).then((result) =>{
         // setTimeout((function() {response.json(result)}), 5000)
@@ -46,30 +43,24 @@ router.post('/', (req: Request, response: Response) => {
         // setTimeout((function() {response.sendStatus(500)}), 5000)
         response.sendStatus(500)
     })
+
 })
 
-router.get('/:id/changes', (req: Request, response: Response) => {
-    const id = req.params.id! as string
+//Disabled due to history based update
 
-    History.findAllChanges(client, id).then((syncResponse) =>{
-        response.send(syncResponse)
-    }).catch((err) => {
-        console.log('PUT changes error:', err)
-        response.sendStatus(500)
-    })
-})
+// router.put('/:id', (req: Request, response: Response) => {
+//     const id = req.params.id as string
+//     // const delta = req.body.delta! as string
+//     const rev = req.body.rev as number
+//     const content = req.body.content! as string
 
-router.post('/:id/changes', (req: Request, response: Response) => {
-    const id = req.params.id! as string
-    const syncRequest = req.body.syncRequest! as ISyncRequest
-
-    DocumentWithHistory.sync(client, id, syncRequest).then((syncResponse) =>{
-        response.send(syncResponse)
-    }).catch((err) => {
-        console.log('PUT changes error:', err)
-        response.sendStatus(500)
-    })
-})
+//     Document.update(client, id, rev, content).then(() =>{
+//         response.send()
+//     }).catch((err) => {
+//         console.log('PUT error:', err)
+//         response.sendStatus(500)
+//     })
+// })
 
 router.put('/:id/uri', (req: Request, response: Response) => {
     const id = req.params.id as string
